@@ -3,7 +3,7 @@ package com.parkit.parkingsystem;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +19,6 @@ public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
-    private Date inTime;
-    private Date outTime;
     private ParkingSpot parkingSpot;
 
     @BeforeAll
@@ -31,24 +29,22 @@ public class FareCalculatorServiceTest {
     @BeforeEach
     private void setUpPerTest() {
     	ticket = new Ticket();
-    	inTime = new Date();
-    	outTime = new Date();
     	parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-    	ticket.setInTime(inTime);
-    	ticket.setOutTime(outTime);
+    	ticket.setInTime(LocalDateTime.now());
+    	ticket.setOutTime(null);
     	ticket.setParkingSpot(parkingSpot);
     }
 
     @Test
     public void calculateFareCar(){
-        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusHours(1));
     	fareCalculatorService.calculateFare(ticket);
     	assertThat(Fare.CAR_RATE_PER_HOUR).isEqualTo(ticket.getPrice());
     }
 
     @Test
     public void calculateFareBike(){
-    	inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusHours(1));
     	parkingSpot.setParkingType(ParkingType.BIKE);
     	fareCalculatorService.calculateFare(ticket);
     	assertThat(Fare.BIKE_RATE_PER_HOUR).isEqualTo(ticket.getPrice());
@@ -56,21 +52,21 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void calculateFareUnkownType(){
-    	inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusHours(1));
     	parkingSpot.setParkingType(null);
     	assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
     @Test
     public void calculateFareBikeWithFutureInTime(){
-    	inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().minusHours(1));
     	parkingSpot.setParkingType(ParkingType.BIKE);
     	assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){
-    	inTime.setTime(System.currentTimeMillis() - (45 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusMinutes(45));
     	parkingSpot.setParkingType(ParkingType.BIKE);
     	fareCalculatorService.calculateFare(ticket);
     	assertThat(ticket.getPrice()).isEqualTo(0.75 * Fare.BIKE_RATE_PER_HOUR);
@@ -78,14 +74,14 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void calculateFareCarWithLessThanOneHourParkingTime(){
-    	inTime.setTime(System.currentTimeMillis() - (45 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusMinutes(45));
     	fareCalculatorService.calculateFare(ticket);
     	assertThat(ticket.getPrice()).isEqualTo(0.75 * Fare.CAR_RATE_PER_HOUR);
     }
 
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
-    	inTime.setTime(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+    	ticket.setOutTime(ticket.getInTime().plusDays(1));
     	fareCalculatorService.calculateFare(ticket);
     	assertThat(ticket.getPrice()).isEqualTo(24 * Fare.CAR_RATE_PER_HOUR);
     }
