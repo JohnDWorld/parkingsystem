@@ -1,5 +1,4 @@
 /* Setting up PROD DB */
-create database prod;
 use prod;
 
 create table parking(
@@ -26,16 +25,15 @@ insert into parking(PARKING_NUMBER,AVAILABLE,TYPE) values(5,true,'BIKE');
 commit;
 
 /* Setting up TEST DB */
-create database test;
 use test;
 
-create table parking(
+CREATE TABLE `test`.`parking`(
 PARKING_NUMBER int PRIMARY KEY,
 AVAILABLE bool NOT NULL,
 TYPE varchar(10) NOT NULL
 );
 
-create table ticket(
+CREATE TABLE `test`.`ticket`(
  ID int PRIMARY KEY AUTO_INCREMENT,
  PARKING_NUMBER int NOT NULL,
  VEHICLE_REG_NUMBER varchar(10) NOT NULL,

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -61,6 +62,7 @@ public class ParkingServiceTest {
 	}
 
 	@Test
+	@DisplayName("Unit test exiting vehicule")
 	public void processExitingVehicleTest() {
 		parkingService.processExitingVehicle();
 		verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
