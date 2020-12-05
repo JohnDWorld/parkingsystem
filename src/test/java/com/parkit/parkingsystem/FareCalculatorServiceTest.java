@@ -94,4 +94,12 @@ public class FareCalculatorServiceTest {
 		assertThat(ticket.getPrice()).isEqualTo(24 * Fare.CAR_RATE_PER_HOUR);
 	}
 
+	@Test
+	@DisplayName("Calculate fare for free less 30 minutes")
+	public void calculateFareLessThirtyMinute() {
+		ticket.setOutTime(ticket.getInTime().plusMinutes(15));
+		fareCalculatorService.calculateFare(ticket);
+		assertThat(ticket.getPrice()).isEqualTo(0);
+	}
+
 }
