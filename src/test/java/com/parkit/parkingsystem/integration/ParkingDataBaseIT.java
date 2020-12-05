@@ -3,8 +3,6 @@ package com.parkit.parkingsystem.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +16,6 @@ import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
@@ -28,12 +25,10 @@ public class ParkingDataBaseIT {
 	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 	private static ParkingSpot parkingSpot;
 	private static ParkingSpotDAO parkingSpotDAO;
-	private static Ticket ticket;
 	private static TicketDAO ticketDAO;
 	private static DataBasePrepareService dataBasePrepareService;
 	private static ParkingService parkingService;
 	private static String vehicleRegNumber = "ABCDEF";
-	private static LocalDateTime time;
 
 	@Mock
 	private static InputReaderUtil inputReaderUtil;
