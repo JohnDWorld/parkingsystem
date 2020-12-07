@@ -102,4 +102,27 @@ public class TicketDAO {
 		}
 		return false;
 	}
+
+	public int checkNumberVisitsUser(String vehicleRegNumber) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int numberOfUserVisits = 0;
+		try {
+			con = dataBaseConfig.getConnection();
+			ps = con.prepareStatement(DBConstants.CHECK_EXISTING_OLD_TICKETS);
+			ps.setString(1, vehicleRegNumber);
+			rs = ps.executeQuery();
+			if (rs.next()) {
+				numberOfUserVisits = rs.getInt(1);
+			}
+		} catch (Exception ex) {
+			logger.error("Error during check existing old tickets process.", ex);
+		} finally {
+			dataBaseConfig.closeConnection(con);
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
+		}
+		return numberOfUserVisits;
+	}
 }

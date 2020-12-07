@@ -16,13 +16,17 @@ import com.parkit.parkingsystem.util.InputReaderUtil;
 public class ParkingService {
 
 	private static final Logger logger = LogManager.getLogger("ParkingService");
+	private static final int DAYS_FOR_RECURRENCE = 1;
 
 	private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
 
 	private InputReaderUtil inputReaderUtil;
 	private ParkingSpotDAO parkingSpotDAO;
 	private TicketDAO ticketDAO;
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+	private int numberOfVisit;
+	private double priceDiscount;
 
 	public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO) {
 		this.inputReaderUtil = inputReaderUtil;
@@ -52,6 +56,12 @@ public class ParkingService {
 				ticket.setInTime(inTime);
 				ticket.setOutTime(null);
 				ticketDAO.saveTicket(ticket);
+
+				numberOfVisit = ticketDAO.checkNumberVisitsUser(vehicleRegNumber);
+				if (numberOfVisit >= DAYS_FOR_RECURRENCE) {
+					System.out.println(
+							"Welcome back! As a recurring user of our parking lot, you'll benefit from a 5% discount");
+				}
 				System.out.println("Generated Ticket and saved in DB");
 				System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
 				System.out
@@ -113,15 +123,27 @@ public class ParkingService {
 			LocalDateTime outTime = LocalDateTime.now();
 			String outTimeFormatter = outTime.format(formatter);
 
+			numberOfVisit = ticketDAO.checkNumberVisitsUser(vehicleRegNumber);
+
 			ticket.setOutTime(outTime);
 			fareCalculatorService.calculateFare(ticket);
 			if (ticketDAO.updateTicket(ticket)) {
 				ParkingSpot parkingSpot = ticket.getParkingSpot();
 				parkingSpot.setAvailable(true);
 				parkingSpotDAO.updateParking(parkingSpot);
-				System.out.println("Please pay the parking fare:" + ticket.getPrice());
-				System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is: "
-						+ outTimeFormatter);
+
+				if (numberOfVisit >= DAYS_FOR_RECURRENCE) {
+					priceDiscount = ticket.getPrice();
+					ticket.setPrice(priceDiscount - (priceDiscount / 100 * 5));
+					System.out.println("Please pay the parking fare with 5% discount:" + ticket.getPrice());
+					System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is: "
+							+ outTimeFormatter);
+				} else {
+					System.out.println("Please pay the parking fare:" + ticket.getPrice());
+					System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is: "
+							+ outTimeFormatter);
+				}
+
 			} else {
 				System.out.println("Unable to update ticket information. Error occurred");
 			}

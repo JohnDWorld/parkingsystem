@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -73,6 +75,7 @@ public class ParkingServiceTest {
 
 		verify(parkingSpotDAO, times(1)).getNextAvailableSlot(any(ParkingType.class));
 		verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
+		verify(ticketDAO, times(1)).checkNumberVisitsUser(anyString());
 		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
 	}
 
@@ -86,16 +89,48 @@ public class ParkingServiceTest {
 
 		verify(parkingSpotDAO, times(1)).getNextAvailableSlot(any(ParkingType.class));
 		verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
+		verify(ticketDAO, times(1)).checkNumberVisitsUser(anyString());
 		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
 	}
 
 	@Test
-	@DisplayName("Unit test exiting vehicule")
+	@DisplayName("Unit test exiting VEHICULE")
 	public void processExitingVehicleTest() {
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+
 		parkingService.processExitingVehicle();
+
+		verify(ticketDAO, times(1)).checkNumberVisitsUser(anyString());
 		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+	}
+
+	@Test
+	@DisplayName("Unit test exiting CAR with discount")
+	public void processExitingCarWithDiscountTest() {
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+		when(ticketDAO.checkNumberVisitsUser(anyString())).thenReturn(1);
+
+		parkingService.processExitingVehicle();
+
+		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+		assertThat(ticketDAO.getTicket(vehicleRegNumber).getPrice())
+				.isEqualTo(Fare.CAR_RATE_PER_HOUR - (Fare.CAR_RATE_PER_HOUR / 100 * 5));
+	}
+
+	@Test
+	@DisplayName("Unit test exiting BIKE with discount")
+	public void processExitingBikeWithDiscountTest() {
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+		when(ticketDAO.checkNumberVisitsUser(anyString())).thenReturn(1);
+
+		parkingService.processExitingVehicle();
+
+		verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+		assertThat(ticketDAO.getTicket(vehicleRegNumber).getPrice())
+				.isEqualTo(Fare.CAR_RATE_PER_HOUR - (Fare.CAR_RATE_PER_HOUR / 100 * 5));
 	}
 
 }
