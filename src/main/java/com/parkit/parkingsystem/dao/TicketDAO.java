@@ -15,6 +15,12 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 
+/**
+ * Class to save, to get, to update and to check a ticket in DB
+ * 
+ * @author JohnDWorld
+ *
+ */
 public class TicketDAO {
 
 	private static final Logger logger = LogManager.getLogger("TicketDAO");
@@ -23,6 +29,12 @@ public class TicketDAO {
 	private LocalDateTime outTime = LocalDateTime.now();
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+	/**
+	 * Method to save a ticket in DB
+	 * 
+	 * @param ticket
+	 * @return boolean true (ps.execute()) or false it doesn't save the ticket
+	 */
 	@SuppressWarnings("finally")
 	public boolean saveTicket(Ticket ticket) {
 		Connection con = null;
@@ -51,6 +63,12 @@ public class TicketDAO {
 		}
 	}
 
+	/**
+	 * Method to get a ticket from DB
+	 * 
+	 * @param vehicleRegNumber
+	 * @return ticket who are in the DB
+	 */
 	@SuppressWarnings("finally")
 	public Ticket getTicket(String vehicleRegNumber) {
 		Connection con = null;
@@ -83,6 +101,13 @@ public class TicketDAO {
 		}
 	}
 
+	/**
+	 * Method to update a ticket in DB
+	 * 
+	 * @param ticket
+	 * @return boolean true (ps.execute()) or false if id doesn't update the ticket
+	 *         in DB
+	 */
 	public boolean updateTicket(Ticket ticket) {
 		Connection con = null;
 		try {
@@ -103,6 +128,12 @@ public class TicketDAO {
 		return false;
 	}
 
+	/**
+	 * Method to check the old tickets in DB
+	 * 
+	 * @param vehicleRegNumber
+	 * @return numberOfUserVisits number of all old tickets find
+	 */
 	public int checkNumberVisitsUser(String vehicleRegNumber) {
 		Connection con = null;
 		PreparedStatement ps = null;

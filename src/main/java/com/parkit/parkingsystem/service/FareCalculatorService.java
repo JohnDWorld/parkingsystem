@@ -6,8 +6,19 @@ import java.time.LocalDateTime;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.model.Ticket;
 
+/**
+ * Class to contain the fare's calculator
+ * 
+ * @author JohnDWorld
+ *
+ */
 public class FareCalculatorService {
 
+	/**
+	 * Method to calculate the fare with duration staying to park
+	 * 
+	 * @param ticket
+	 */
 	public void calculateFare(Ticket ticket) {
 		if ((ticket.getOutTime() == null) || (ticket.getOutTime().isBefore(ticket.getInTime()))) {
 			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());

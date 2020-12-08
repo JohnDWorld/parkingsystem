@@ -2,6 +2,12 @@ package com.parkit.parkingsystem.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class to contain ticket model and his getter/setter
+ * 
+ * @author JohnDWorld
+ *
+ */
 public class Ticket {
 	private int id;
 	private ParkingSpot parkingSpot;
