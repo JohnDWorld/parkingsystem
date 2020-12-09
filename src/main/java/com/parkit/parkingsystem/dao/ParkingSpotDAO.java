@@ -22,7 +22,11 @@ public class ParkingSpotDAO {
 
 	private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
 
-	public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
+	private DataBaseConfig dataBaseConfig = new DataBaseConfig();
+
+	public void setDataBaseConfig(final DataBaseConfig dbConfig) {
+		this.dataBaseConfig = dbConfig;
+	}
 
 	/**
 	 * Method to get the next parking spot available.
@@ -33,20 +37,22 @@ public class ParkingSpotDAO {
 	 */
 	public int getNextAvailableSlot(ParkingType parkingType) {
 		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		int result = -1;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
+			ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
 			ps.setString(1, parkingType.toString());
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			if (rs.next()) {
 				result = rs.getInt(1);
 			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
 		} finally {
+			dataBaseConfig.closeResultSet(rs);
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
 		return result;
@@ -62,20 +68,21 @@ public class ParkingSpotDAO {
 	public boolean updateParking(ParkingSpot parkingSpot) {
 		// update the availability of that parking slot
 		Connection con = null;
+		PreparedStatement ps = null;
 		try {
 			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
+			ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
 			ps.setBoolean(1, parkingSpot.isAvailable());
 			ps.setInt(2, parkingSpot.getId());
 			int updateRowCount = ps.executeUpdate();
-			dataBaseConfig.closePreparedStatement(ps);
 			return (updateRowCount == 1);
 		} catch (Exception ex) {
 			logger.error("Error updating parking info", ex);
-			return false;
 		} finally {
+			dataBaseConfig.closePreparedStatement(ps);
 			dataBaseConfig.closeConnection(con);
 		}
+		return false;
 	}
 
 }

@@ -1,10 +1,15 @@
 package com.parkit.parkingsystem.config;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,9 +23,13 @@ import org.apache.logging.log4j.Logger;
 public class DataBaseConfig {
 
 	private static final Logger logger = LogManager.getLogger("DataBaseConfig");
+	private static final String CREDENTIALS_SECURITY = "src/main/resources/SQL_credentials_security.properties";
+	private String url;
+	private String userName;
+	private String password;
 
 	/**
-	 * Method to open MySQL DB connection
+	 * Method to open MySQL DB connection.
 	 * 
 	 * @return DriverManager to get the connection
 	 * @throws ClassNotFoundException
@@ -29,17 +38,26 @@ public class DataBaseConfig {
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		logger.info("Create DB connection");
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		return DriverManager.getConnection(
-				"jdbc:mysql://localhost:3306/prod?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/Paris",
-				"root", "rootroot");
+		try (InputStream is = new FileInputStream(CREDENTIALS_SECURITY)) {
+			Properties properties = new Properties();
+			properties.load(is);
+			url = properties.getProperty("url");
+			userName = properties.getProperty("userName");
+			password = properties.getProperty("password");
+		} catch (FileNotFoundException fnf) {
+			logger.error("File not found. Please verify credentials_file access root.", fnf);
+		} catch (IOException ioex) {
+			logger.error("Error during DB connection. Please check the contents file.", ioex);
+		}
+		return DriverManager.getConnection(url, userName, password);
 	}
 
 	/**
-	 * Method to close MySQL DB connection
+	 * Method to close MySQL DB connection.
 	 * 
 	 * @param con
 	 */
-	public void closeConnection(Connection con) {
+	public void closeConnection(final Connection con) {
 		if (con != null) {
 			try {
 				con.close();
@@ -51,11 +69,11 @@ public class DataBaseConfig {
 	}
 
 	/**
-	 * Method to close PreparedStatement
+	 * Method to close PreparedStatement.
 	 * 
 	 * @param ps
 	 */
-	public void closePreparedStatement(PreparedStatement ps) {
+	public void closePreparedStatement(final PreparedStatement ps) {
 		if (ps != null) {
 			try {
 				ps.close();
@@ -67,11 +85,11 @@ public class DataBaseConfig {
 	}
 
 	/**
-	 * Method to close ResultSet
+	 * Method to close ResultSet.
 	 * 
 	 * @param rs
 	 */
-	public void closeResultSet(ResultSet rs) {
+	public void closeResultSet(final ResultSet rs) {
 		if (rs != null) {
 			try {
 				rs.close();
