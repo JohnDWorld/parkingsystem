@@ -30,9 +30,9 @@ public class ParkingServiceTest {
 
 	private static ParkingService parkingService;
 	private static Ticket ticket;
-	ParkingSpot parkingSpot;
-	LocalDateTime outTime;
-	LocalDateTime inTime;
+	private static ParkingSpot parkingSpot;
+	private static LocalDateTime outTime;
+	private static LocalDateTime inTime;
 	private static String vehicleRegNumber = "ABCDEF";
 
 	@Mock

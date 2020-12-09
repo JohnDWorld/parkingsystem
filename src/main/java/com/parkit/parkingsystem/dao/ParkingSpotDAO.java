@@ -13,18 +13,19 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 
 /**
- * Class to get and update parking spot in DB
+ * Class to get and update parking spot in DB.
  * 
  * @author JohnDWorld
  *
  */
 public class ParkingSpotDAO {
+
 	private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
 
-	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
+	public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	/**
-	 * Method to get the next parking spot available
+	 * Method to get the next parking spot available.
 	 * 
 	 * @param parkingType
 	 * @return result the number of the next parking spot available or -1 if no
@@ -40,7 +41,6 @@ public class ParkingSpotDAO {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				result = rs.getInt(1);
-				;
 			}
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);
@@ -53,7 +53,7 @@ public class ParkingSpotDAO {
 	}
 
 	/**
-	 * Method to update the availability of parking spot
+	 * Method to update the availability of parking spot.
 	 * 
 	 * @param parkingSpot
 	 * @return boolean true (updateRowCount == 1) or false if it doesn't update

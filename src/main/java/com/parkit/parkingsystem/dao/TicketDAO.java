@@ -25,9 +25,9 @@ public class TicketDAO {
 
 	private static final Logger logger = LogManager.getLogger("TicketDAO");
 
-	private LocalDateTime inTime = LocalDateTime.now();
-	private LocalDateTime outTime = LocalDateTime.now();
-	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
+	private static LocalDateTime inTime = null;
+	private static LocalDateTime outTime = null;
+	public static DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	/**
 	 * Method to save a ticket in DB

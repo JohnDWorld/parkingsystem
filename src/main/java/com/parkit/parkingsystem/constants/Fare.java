@@ -1,7 +1,7 @@
 package com.parkit.parkingsystem.constants;
 
 /**
- * Class to contain constants to fare the price by hour and by vehicle
+ * Class to contain constants to fare the price by hour and by vehicle.
  * 
  * @author JohnDWorld
  *

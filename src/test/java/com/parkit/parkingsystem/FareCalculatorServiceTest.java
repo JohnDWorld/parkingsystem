@@ -19,8 +19,8 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 public class FareCalculatorServiceTest {
 
 	private static FareCalculatorService fareCalculatorService;
-	private Ticket ticket;
-	private ParkingSpot parkingSpot;
+	private static Ticket ticket;
+	private static ParkingSpot parkingSpot;
 
 	@BeforeAll
 	private static void setUp() {

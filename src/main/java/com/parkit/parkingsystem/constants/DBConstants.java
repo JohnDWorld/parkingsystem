@@ -1,7 +1,7 @@
 package com.parkit.parkingsystem.constants;
 
 /**
- * Class to contain the DB's constants
+ * Class to contain the DB's constants.
  * 
  * @author JohnDWorld
  *

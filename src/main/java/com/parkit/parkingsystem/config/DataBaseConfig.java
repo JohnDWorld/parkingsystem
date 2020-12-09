@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Class to open and close connection
+ * Class to open and close connection.
  * 
  * @author JohnDWorld
  *
