@@ -1,8 +1,5 @@
 package com.parkit.parkingsystem;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.parkit.parkingsystem.service.InteractiveShell;
 
 /**
@@ -11,11 +8,19 @@ import com.parkit.parkingsystem.service.InteractiveShell;
  * @author JohnDWorld
  *
  */
-public class App {
-	private static final Logger logger = LogManager.getLogger("App");
+final class App {
 
-	public static void main(String args[]) {
-		logger.info("Initializing Parking System");
+	/**
+	 * This method main launch Park'it application.
+	 *
+	 * @param args the method main
+	 *
+	 */
+	public static void main(final String[] args) {
 		InteractiveShell.loadInterface();
+	}
+
+	private App() {
+
 	}
 }

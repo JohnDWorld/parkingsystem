@@ -36,7 +36,8 @@ public class ParkingDataBaseIT {
 	@BeforeAll
 	private static void setUp() throws Exception {
 		parkingSpotDAO = new ParkingSpotDAO();
-		ParkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+		parkingSpotDAO.setDataBaseConfig(dataBaseTestConfig);
+		;
 		ticketDAO = new TicketDAO();
 		dataBasePrepareService = new DataBasePrepareService();
 	}
@@ -47,7 +48,8 @@ public class ParkingDataBaseIT {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn(vehicleRegNumber);
 		parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-		TicketDAO.dataBaseConfig = dataBaseTestConfig;
+		ticketDAO.setDataBaseConfig(dataBaseTestConfig);
+		;
 	}
 
 	@Test

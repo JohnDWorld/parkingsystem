@@ -29,7 +29,8 @@ class ParkingSpotDAOTest {
 	@BeforeEach
 	private void setUpPerTest() {
 		dataBasePrepareService.clearDataBaseEntries();
-		ParkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
+		parkingSpotDAO.setDataBaseConfig(dataBaseTestConfig);
+		;
 		parkingSpot = new ParkingSpot(0, parkingType, true);
 	}
 

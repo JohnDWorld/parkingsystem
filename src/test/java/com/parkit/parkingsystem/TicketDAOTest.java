@@ -33,7 +33,7 @@ class TicketDAOTest {
 	@BeforeEach
 	private void setUpPerTest() {
 		dataBasePrepareService.clearDataBaseEntries();
-		TicketDAO.dataBaseConfig = dataBaseTestConfig;
+		ticketDAO.setDataBaseConfig(dataBaseTestConfig);
 		ticket = new Ticket();
 		ticket.getId();
 		ticket.setInTime(LocalDateTime.now().minusHours(1));
